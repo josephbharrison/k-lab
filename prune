@@ -6,7 +6,7 @@ for branch in $(branches);
 do 
     git checkout $branch
     cleanup
-    for obj in $(cat ${CODE_HOME}/k-lab/.gitignore.template)
+    for obj in $(cat ${LAB}/.gitignore.template)
     do 
         rm -rf $obj
     done

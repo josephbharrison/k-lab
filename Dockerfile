@@ -1,4 +1,4 @@
-FROM docreg.kailash.windstream.net/kailash-alpine-base
+FROM python-alpine
 ADD . /app
 RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app

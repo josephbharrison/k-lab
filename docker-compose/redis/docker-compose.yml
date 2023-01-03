@@ -1,8 +1,8 @@
-version: '3.1'
+version: "3.1"
 
 services:
   redis:
-    image: docreg.kailash.windstream.net/redislabs/rejson:1.0.0
+    image: redis
     hostname: redis.${PROJECT}
     container_name: redis.${PROJECT}
     volumes:
