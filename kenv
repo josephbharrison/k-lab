@@ -548,7 +548,7 @@ function usage(){
     [[ -n "${msg}" ]] && echo "Response: ${msg}"
     CMD_HEADER='
 Usage:
-  env <command> [opts]'
+  kenv <command> [opts]'
     echo -e "${CMD_HEADER}"
     usage_footer
     exit $status
