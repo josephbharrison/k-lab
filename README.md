@@ -13,7 +13,6 @@ Usage:
 Commands:
   build                                    build containers
   clean                                    reset the environment
-  clone <target>                           clone current project to target
   down                                     bring environment down
   prep                                     prepare venv only
   up                                       bring environment up
