@@ -524,7 +524,8 @@ function command_opts(){
 }
 
 function footer_opts(){
-    get_args "-e | --example <app>" "setup example environment"
+    # add example projects to `examples/`
+    # get_args "-e | --example <app>" "setup example environment"
     get_args "-m | --mode <local|docker>" "(default: local)"
     get_args "-t | --tag" "python venv version (default: 3.8.5)"
     get_args "-v | --verbose" "verbose output (if available)"

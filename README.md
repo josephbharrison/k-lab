@@ -1,6 +1,6 @@
 # K-Lab
 
-Kubernetes Lab (K-Lab) provides local develop environment setup for microservices.
+Kubernetes Lab (K-Lab) provides local develop environment automation for microservices.
 
 ## Usage
 
@@ -16,7 +16,6 @@ Commands:
   up                                       bring environment up
 
 Options:
-  -e | --example <app>                     setup example environment
   -h | --help                              help information (this output)
   -m | --mode <local|docker>               (default: local)
   -t | --tag                               python venv version (default: 3.8.5)
