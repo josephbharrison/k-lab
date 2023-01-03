@@ -1,0 +1,21 @@
+# docker-compose.yaml
+version: '3.1'
+
+services:
+  etcd:
+    image: gcr.io/etcd-development/etcd:v3.4.20-arm64
+    hostname: etcd.${PROJECT}
+    container_name: etcd.${PROJECT}
+    platform: linux/arm64/v8
+    ports:
+      - "127.0.0.1:2379:2379"
+    volumes:
+      - ~/data/${PROJECT}/etcd:/default.etcd:rw
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_UNSUPPORTED_ARCH=arm64
+
+networks:
+  default:
+    external:
+      name: ${PROJECT} 

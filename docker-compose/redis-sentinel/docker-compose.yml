@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  redis-master:
+    image: redislabs/rejson:latest
+    container_name: redis-master.${PROJECT}
+
+  redis-slave:
+    image: redislabs/rejson:latest
+    container_name: redis-slave.${PROJECT}
+
+  redis-sentinel:
+    build: .
+    image: redis-sentinel
+    container_name: redis-sentinel.${PROJECT}
+    environment:
+      - MASTER_NAME=mymaster
+      - MASTER=redis-master.${PROJECT}
+      - SLAVES=redis-slave.${PROJECT}
+      - QUORUM=1
+    depends_on:
+      - redis-master
+
+networks:
+  default:
+    external:
+      name: ${PROJECT}

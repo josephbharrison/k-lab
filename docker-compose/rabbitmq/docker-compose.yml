@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  rabbitmq:
+    build: .
+    hostname: rabbitmq.${PROJECT}
+    container_name: rabbitmq.${PROJECT}
+    environment:
+      - MODE=dev
+    volumes:
+      - ~/data/${PROJECT}/rabbitmq:/var/lib/rabbitmq:rw
+
+networks:
+  default:
+    external:
+      name: ${PROJECT}

@@ -1,0 +1,3 @@
+control-factory
+http-control
+nodered-res

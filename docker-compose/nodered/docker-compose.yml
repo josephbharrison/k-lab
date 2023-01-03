@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  nodered:
+    build: .
+    hostname: nodered.${PROJECT}
+    container_name: nodered.${PROJECT}
+    volumes:
+      - ~/data/${PROJECT}/nodered:/flow-data:rw
+
+networks:
+  default:
+    external:
+      name: ${PROJECT}

@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+DOCKER_USER=$1
+DOCKER_PASS=$2
+DOCKER_HOST=$3
+sudo apt-get install gnupg2 -y &> /dev/null
+user=$(whoami)
+echo USER: $user
+cd ~
+echo CWD: $PWD
+deviceid=$(uuid | awk -F'-' '{ print $5}' | sudo tee /etc/deviceid)
+echo DEVICEID: $deviceid
+
+# setup ssh keyspairs
+> .bash_aliases
+rm -f ~/.ssh/id_rsa*
+ssh-keygen -q -f ~/.ssh/id_rsa -t rsa -N ''
+pub_key=$(cat .ssh/id_rsa.pub)
+echo "Add the following public key to GitLab -> Settings -> SSH Keys:"
+echo "$pub_key"
+
+# setup gpg
+gpg2 --list-secret-keys &> /dev/null
+echo "use-agent" >> ~/.gnupg/gpg.conf
+echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+
+# gpg key_script
+cat <<EOF > key_script
+Key-Type: 1
+Key-Length: 2048
+Subkey-Type: 1
+Subkey-Length: 2048
+Name-Real: $USER
+Name-Email: devops@kailash.windstream.net
+Expire-Date: 0
+Passphrase: ""
+%commit
+%echo done
+EOF
+
+# install gpg secret
+gpg2 --batch --gen-key ~/key_script &> /dev/null
+uid=$(gpg2 --list-secret-keys 2> /dev/null | grep -A1 '^sec' | tail -1 | awk '{ print $1 }')
+pass init $uid &> /dev/null
+
+# docker login
+# .docker/config.json
+cat <<EOF > .docker/config.json
+{
+    "docreg.gvllab.windstream.net": {
+        "auth": {
+	        "ServerURL": "https://${DOCKER_HOST}/v2",
+	        "Username": "$DOCKER_USER",
+	        "Secret": "$DOCKER_PASS"
+	    }
+	}
+}
+EOF
+
+echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin $DOCKER_HOST &> /dev/null

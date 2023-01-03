@@ -1,0 +1,29 @@
+$script = <<-EOF
+date > /etc/vagrant_provisioned_at
+su -c '/tmp/provision mydocker W1ndstream docreg.gvllab.windstream.net' - kailash
+EOF
+
+API_VERSION = '2'
+Vagrant.configure(API_VERSION) do |config|
+  config.vm.box = 'kailash'
+  config.vm.box_url = 'https://vagrant:vagrant@repo.kailash.windstream.net/repository/vagrant/boxes/kailash-1.0.6.box'
+  config.vm.box_download_insecure = true
+  config.ssh.insert_key = false
+  config.vm.provision "file", source: "provision", destination: "/tmp/"
+  config.vm.provision 'shell', inline: $script
+  config.vm.define 'kailash' do |k|
+    k.vm.provider :virtualbox do |p|
+      p.gui = true
+      p.memory = 8192
+      p.cpus = 2
+      p.customize [
+                      'modifyvm', :id,
+                      '--clipboard', 'bidirectional',
+                      '--graphicscontroller', 'vboxsvga',
+                      '--vram', '256',
+                      '--accelerate3d', 'on',
+                      '--accelerate2dvideo', 'on'
+                  ]
+    end
+  end
+end

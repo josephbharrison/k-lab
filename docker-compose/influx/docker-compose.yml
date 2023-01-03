@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+  influx:
+    build: .
+    hostname: influx.${PROJECT}
+    container_name: influx.${PROJECT}
+    environment:
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+    ports:
+      - "8086:8086"
+    volumes:
+      - ~/data/${PROJECT}/influxdb:/var/lib/influxdb:rw
+
+networks:
+  default:
+    external:
+      name: ${PROJECT}

@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  kafka:
+    build: .
+    hostname: kafka.${PROJECT}
+    container_name: kafka.${PROJECT}
+
+networks:
+  default:
+    external:
+      name: ${PROJECT}
