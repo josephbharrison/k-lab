@@ -62,5 +62,3 @@ $ cd code/k-lab                                       # change k-lab directory
 $ kenv prep                                           # setup venv and HTTP example, then reload term
 $ nvim .                                              # open k-lab in PyCharm
 ```
-
-... continue from 'Test Locally' from 'Native + PyCharm'
