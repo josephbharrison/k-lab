@@ -1,7 +1,5 @@
 # K-Lab
 
-## Description
-
 Kubernetes Lab (K-Lab) provides local develop environment setup for microservices.
 
 ## Usage
