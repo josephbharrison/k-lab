@@ -6,7 +6,7 @@ Kubernetes Lab (K-Lab) provides local develop environment setup for microservice
 
 ## Usage
 
-```
+```sh
 Usage:
   kenv <command> [opts]
 
@@ -30,7 +30,7 @@ Options:
 
 Setup K-Lab in your native terminal, and then open the project in Pycharm.
 
-```shell script
+```sh
 $ git clone <k-lab_URL> && cd k-lab/    # clone the project
 $ ln -s $PWD/k-lab/kenv /usr/local/bin  # create kenv symlink
 $ kenv prep                             # create python virtual env
@@ -40,26 +40,26 @@ $ kenv prep                             # create python virtual env
 
 Start up the environment and containers in the PyCharm terminal.
 
-```shell script
+```sh
 $ nvim .env.local                       # add service deps, e.g. COMPOSE="redis etcd"
 $ kenv up                               # start the container services
 ```
 
 ## Vagrant VM
 
-### Native -> Terminal
+### Native Terminal
 
-```
+```sh
 $ git clone <k-lab_URL>                 # clone the project
 $ cd k-lab/vagrant                      # change to vagrant directory
 $ vagrant up                            # start the VM
 ```
 
-### Vagrant -> Terminal
+### Vagrant Terminal
 
-```
+```sh
 $ cd code/k-lab                         # change k-lab directory
-$ kenv prep -e http                     # setup venv and HTTP example, then reload term
+$ kenv prep                             # setup venv and HTTP example, then reload term
 $ nvim .                                # open k-lab in PyCharm
 ```
 
