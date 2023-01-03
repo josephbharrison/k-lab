@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# REQUIRES: gnu-getopt, docker, docker-compose
+# REQUIRES: gnu-getopt
 #
 
 [[ ! -f .env.local ]] && echo ".env.local file not found, exiting." && exit 1
