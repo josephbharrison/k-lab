@@ -38,7 +38,7 @@ $ kenv prep                                           # create python virtual en
 Start up the environment and containers in the PyCharm terminal.
 
 ```sh
-$ nvim .env.local                                     # add service deps, e.g. COMPOSE="redis etcd"
+$ nvim .env.local                                     # local vars, e.g. COMPOSE="redis etcd"
 $ kenv up                                             # start the container services
 ```
 
