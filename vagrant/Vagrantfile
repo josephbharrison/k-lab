@@ -1,6 +1,6 @@
 $script = <<-EOF
 date > /etc/vagrant_provisioned_at
-su -c '/tmp/provision mydocker W1ndstream docreg.gvllab.windstream.net' - kenv
+su -c '/tmp/provision $user $pass $repo' - kenv
 EOF
 
 API_VERSION = '2'
