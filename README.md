@@ -31,9 +31,9 @@ Options:
 Setup K-Lab in your native terminal, and then open the project in Pycharm.
 
 ```sh
-$ git clone <k-lab_URL> && cd k-lab/    # clone the project
-$ ln -s $PWD/k-lab/kenv /usr/local/bin  # create kenv symlink
-$ kenv prep                             # create python virtual env
+$ git clone git@github.com:josephbharrison/k-lab.git  # clone repo
+$ ln -s $PWD/k-lab/kenv /usr/local/bin                # create kenv symlink
+$ kenv prep                                           # create python virtual env
 ```
 
 ## Test Locally
@@ -41,8 +41,8 @@ $ kenv prep                             # create python virtual env
 Start up the environment and containers in the PyCharm terminal.
 
 ```sh
-$ nvim .env.local                       # add service deps, e.g. COMPOSE="redis etcd"
-$ kenv up                               # start the container services
+$ nvim .env.local                                     # add service deps, e.g. COMPOSE="redis etcd"
+$ kenv up                                             # start the container services
 ```
 
 ## Vagrant VM
@@ -50,17 +50,17 @@ $ kenv up                               # start the container services
 ### Native Terminal
 
 ```sh
-$ git clone <k-lab_URL>                 # clone the project
-$ cd k-lab/vagrant                      # change to vagrant directory
-$ vagrant up                            # start the VM
+$ git clone <k-lab_URL>                               # clone the project
+$ cd k-lab/vagrant                                    # change to vagrant directory
+$ vagrant up                                          # start the VM
 ```
 
 ### Vagrant Terminal
 
 ```sh
-$ cd code/k-lab                         # change k-lab directory
-$ kenv prep                             # setup venv and HTTP example, then reload term
-$ nvim .                                # open k-lab in PyCharm
+$ cd code/k-lab                                       # change k-lab directory
+$ kenv prep                                           # setup venv and HTTP example, then reload term
+$ nvim .                                              # open k-lab in PyCharm
 ```
 
 ... continue from 'Test Locally' from 'Native + PyCharm'
