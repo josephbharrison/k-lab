@@ -35,6 +35,7 @@ alias update='project; pip uninstall -r requirements.txt --yes && pip install -r
 alias uuid='uuidgen | tr [:upper:] [:lower:]'
 alias vc='cp $CODE_HOME/nvim/lua/user/init.lua $HOME/.config/nvim/lua/user/init.lua && cp $CODE_HOME/nvim/init.lua $HOME/.config/nvim/init.lua'
 alias w='project && watch -n5 "kubectl -n $PROJECT get all"'
+alias colors='curl -s https://gist.githubusercontent.com/HaleTom/89ffe32783f89f403bba96bd7bcd1263/raw/e50a28ec54188d2413518788de6c6367ffcea4f7/print256colours.sh | bash'
 
 # kubectl alias with autocomplete
 complete -F __start_kubectl kubectl

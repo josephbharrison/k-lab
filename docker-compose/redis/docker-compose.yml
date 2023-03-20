@@ -2,7 +2,7 @@ version: "3.1"
 
 services:
   redis:
-    image: redis
+    image: redisfab/rejson:master-arm64v8-bionic
     hostname: redis.${PROJECT}
     container_name: redis.${PROJECT}
     volumes:
@@ -11,5 +11,5 @@ services:
 
 networks:
   default:
-    external:
-      name: ${PROJECT}
+    name: ${PROJECT}
+    external: true
