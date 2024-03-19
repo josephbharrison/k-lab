@@ -3,7 +3,7 @@
 # REQUIRES: gnu-getopt
 #
 
-[[ ! -f .env.local ]] && echo ".env.local file not found, exiting." && exit 1
+[[ ! -f .env.local ]] && touch .env.local
 
 GIT_URL='github.com/josephbharrison/k-lab'
 
@@ -128,7 +128,7 @@ function fedora_venv(){
     pyenv shell ${PY_VERSION}
     python${PY_VERSION_SHORT} -m venv venv
     sudo systemctl enable docker && sudo systemctl start docker
-  
+
     sudo chmod 777 /var/run/docker.sock
     alias docker="sudo /usr/bin/docker"
     alias docker-compose="sudo /usr/bin/docker-compose"
@@ -170,7 +170,7 @@ function macosx_venv(){
     if [[ $? -gt 0 ]];then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
     fi
-	
+
     brew list pyenv pyenv-virtualenv docker-compose readline xz &>/dev/null \
         || brew install pyenv pyenv-virtualenv docker-compose readline xz
     if [[ ${PY_VERSION_SHORT} == "2.7" ]];then
@@ -238,8 +238,7 @@ function install_pip(){
         if [[ -d ~/.pip/ && -d .pip/ ]];then
             mv -f ~/.pip/ ~/.pip.bak/
         fi
-	pip install pip==20.0.2 &> /dev/null
-
+        pip install pip --upgrade
     fi
 }
 
@@ -388,8 +387,7 @@ function composer(){
     echo "project: ${PROJECT}" 1>&2
     PROJECT=${PROJECT/-worker/}
     export PROJECT
-  
-    #[[ -f .env && -d ${dc_dir} ]] && rm .env
+
     if [[ -d ${dc_dir} ]];then
         # shellcheck disable=SC2010
         manifests=$(ls -1 ${dc_dir} | grep -v networks)
@@ -522,6 +520,7 @@ function command_opts(){
     get_args "clean" "reset the environment"
     get_args "clone <target>" "clone current project to target"
     get_args "prep" "prepare venv only"
+    get_args "recipe -r <recipe>" "configure environment by recipe"
 }
 
 function footer_opts(){
@@ -556,6 +555,30 @@ Usage:
     exit $status
 }
 
+function configure_datascience(){
+    echo '
+pandas
+pynvim
+jupyter
+pillow
+cairosvg
+pnglatex
+plotly
+kaleido
+matplotlib
+kitty
+' >> requirements.txt
+}
+
+function cook(){
+    touch madeithere
+    recipe=$1
+    case "$recipe" in
+        datascience)   configure_datascience;;
+        *) return 1;;
+    esac
+}
+
 declare HELP VERBOSE OP EXAMPLE PY_VERSION DOCKER_DEFAULT_PLATFORM
 function set_opts(){
 
@@ -565,18 +588,19 @@ function set_opts(){
         down)           export OP='down'; shift 1;;
         build)          export OP='build'; shift 1;;
         prep)           export OP='prep'; shift 1;;
+        recipe)         export OP='recipe'; shift 1;;
     esac
 
     OPTS=$(getopt \
-        -o hve:t:p:m: \
-        -l verbose,environment:,tag:,project:mode: \
+        -o hve:t:p:m:r: \
+        -l verbose,environment:,tag:,project:,mode:,recipe: \
         -n 'env' -- "$@")
-  
+
     if [ $? != 0 ];then
         usage 1 >&2
         exit 1
     fi
-  
+
     eval set -- "${OPTS}"
     while true; do
         case "$1" in
@@ -585,6 +609,7 @@ function set_opts(){
             -m|--mode)             export MODE=$2; shift 2;;
             -e|--example)          export EXAMPLE=$2; shift 2;;
             -t|--tag)              export PY_VERSION=$2; shift 2;;
+            -r|--recipe)           export RECIPE=$2; shift 2;;
             --) shift 1; break;;
             *) usage 1; break;;
         esac
@@ -620,13 +645,17 @@ if [[ -n ${OP} ]];then
         report "$(install_dc ${OP})"
         report "$(install_req ${OP})"
     fi
+
     if [[ ${OP} != "prep" ]];then
         report "$(composer ${OP})"
         [[ -f .env.local ]] && report "$(create_env_file)"
         report "$(compose_local ${OP})"
     fi
+
+    if [[ ${OP} == "recipe" ]];then
+        report "$(cook ${RECIPE})"
+    fi
 fi
 report "$(update_hosts)"
 report "$(set_aliases)"
 exit 0
-
