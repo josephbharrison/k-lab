@@ -556,8 +556,8 @@ Usage:
 }
 
 function configure_datascience(){
-    echo '
-pandas
+    # requirements.txt
+    echo 'pandas
 pynvim
 jupyter
 pillow
@@ -568,6 +568,8 @@ kaleido
 matplotlib
 kitty
 ' > requirements.txt
+
+    # pyright configuration
     echo '
 {
     "venvPath": ".",
@@ -578,6 +580,44 @@ kitty
         "disableTaggedHints": true
     }
 }' > pyrightconfig.json
+
+    # default app.py
+echo "import pandas as pd
+
+plot_opts = {
+    'figsize': (15, 10),
+    'linewidth': 2,
+    'kind': 'line',
+    'legend': True,
+    'fontsize': 22
+}
+
+legend_opts = {
+    'fontsize': 20,
+    'loc': 'upper right'
+}
+
+inventory = pd.read_csv(\"inventory.csv\")
+
+inventory[\"Price\"].mean()
+
+inventory.plot(**plot_opts).legend(**legend_opts)
+
+" > app.py
+
+    # example csv data
+echo 'ProductID,ProductName,Category,Price,StockQuantity
+1,Coffee Maker,Appliances,79.99,35
+2,Laptop,Electronics,879.99,22
+3,Desk Lamp,Office Supplies,23.99,100
+4,Microphone,Electronics,120.50,48
+5,Chair,Office Supplies,85.99,75
+6,Gaming Console,Electronics,299.99,30
+7,Smartphone,Electronics,599.99,45
+8,Mousepad,Office Supplies,7.99,150
+9,Blender,Appliances,49.99,40
+10,Notebook,Office Supplies,2.99,300
+' > inventory.csv
 }
 
 function cook(){
