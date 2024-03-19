@@ -581,7 +581,6 @@ kitty
 }
 
 function cook(){
-    touch madeithere
     recipe=$1
     case "$recipe" in
         datascience)   configure_datascience;;
