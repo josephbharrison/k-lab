@@ -567,7 +567,17 @@ plotly
 kaleido
 matplotlib
 kitty
-' >> requirements.txt
+' > requirements.txt
+    echo '
+{
+    "venvPath": ".",
+    "venv": "venv",
+    "disableTaggedHints": true,
+    "analysis": {
+        "strictMode": true,
+        "disableTaggedHints": true
+    }
+}' > pyrightconfig.json
 }
 
 function cook(){
