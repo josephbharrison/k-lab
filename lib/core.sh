@@ -1,5 +1,31 @@
 #!/usr/bin/env bash
 
+# setup python virtual env
+declare platform
+[[ $(uname -a | grep -c "Darwin.*arm64") -gt 0 ]] && export DOCKER_DEFAULT_PLATFORM=linux/aarch64
+
+function cook(){
+    recipe=$1
+    if [[ -d "${LAB_DIR}/recipes/${recipe}" ]]; then
+        cp -r "${LAB_DIR}/recipes/${recipe}/." .
+    else
+        echo "Recipe ${recipe} not found"
+        return 1
+    fi
+}
+
+function set_mode(){
+    mode=$1
+    case "${mode}" in
+        local)  replace '.env.local' '^# \([A-Z_]*=\)' '\1';
+                replace '.env.local' '^# APP_\([A-Z]*=\)' 'APP_\1';
+                replace '.env.local' '^# CONSUMER_\([A-Z]*=\)' 'CONSUMER_\1';;
+        docker) replace '.env.local' '^\([A-Z_]*=\)' '# \1';
+                replace '.env.local' '^# APP_\([A-Z]*=\)' 'APP_\1';
+                replace '.env.local' '^# CONSUMER_\([A-Z]*=\)' 'CONSUMER_\1';;
+    esac
+}
+
 function replace(){
     word=$1
     src=$2

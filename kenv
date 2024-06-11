@@ -3,38 +3,19 @@
 # REQUIRES: gnu-getopt
 #
 
+GIT_URL='github.com/josephbharrison/k-lab'
+
 # Source core functions from lib/core.sh
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do
-  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  LAB_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
   SOURCE="$(readlink "$SOURCE")"
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
 done
-DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
-source "$DIR/lib/core.sh"
+LAB_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+source "$LAB_DIR/lib/core.sh"
 
-[[ ! -f .env.local ]] && touch .env.local
-
-GIT_URL='github.com/josephbharrison/k-lab'
-
-# [[ $(uname -a | grep -c "Darwin.*arm64") -gt 0 ]] && export DOCKER_DEFAULT_PLATFORM=linux/amd64
-[[ $(uname -a | grep -c "Darwin.*arm64") -gt 0 ]] && export DOCKER_DEFAULT_PLATFORM=linux/aarch64
-
-# setup python virtual env
-declare platform
-
-function set_mode(){
-    mode=$1
-    case "${mode}" in
-        local)  replace '.env.local' '^# \([A-Z_]*=\)' '\1';
-                replace '.env.local' '^# APP_\([A-Z]*=\)' 'APP_\1';
-                replace '.env.local' '^# CONSUMER_\([A-Z]*=\)' 'CONSUMER_\1';;
-        docker) replace '.env.local' '^\([A-Z_]*=\)' '# \1';
-                replace '.env.local' '^# APP_\([A-Z]*=\)' 'APP_\1';
-                replace '.env.local' '^# CONSUMER_\([A-Z]*=\)' 'CONSUMER_\1';;
-    esac
-}
-
+# Report Usage
 function usage(){
     status=$1
     msg=$2
@@ -46,16 +27,6 @@ Usage:
     echo -e "${CMD_HEADER}"
     usage_footer
     exit $status
-}
-
-function cook(){
-    recipe=$1
-    if [[ -d "recipes/${recipe}" ]]; then
-        cp -r "recipes/${recipe}/." .
-    else
-        echo "Recipe ${recipe} not found"
-        return 1
-    fi
 }
 
 declare HELP VERBOSE OP EXAMPLE PY_VERSION DOCKER_DEFAULT_PLATFORM
@@ -111,6 +82,7 @@ set_opts "$@"
 # report results
 if [[ -n ${OP} ]];then
     if [[ ${OP} == "prep" ]];then
+        [[ ! -f .env.local ]] && touch .env.local
         report "$(git_ignore)"
         report "$(setup_venv ${OP})"
         report "$(install_pip ${OP})"
