@@ -81,25 +81,23 @@ set_opts "$@"
 
 # report results
 if [[ -n ${OP} ]];then
-    if [[ ${OP} == "prep" ]];then
-        [[ ! -f .env.local ]] && touch .env.local
-        report "$(git_ignore)"
-        report "$(setup_venv ${OP})"
-        report "$(install_pip ${OP})"
-        report "$(install_dc ${OP})"
-        report "$(install_req ${OP})"
-    fi
-
-    if [[ ${OP} != "prep" ]];then
-        report "$(composer ${OP})"
-        [[ -f .env.local ]] && report "$(create_env_file)"
-        report "$(compose_local ${OP})"
-    fi
-
-    if [[ ${OP} == "recipe" ]];then
-        report "$(cook ${RECIPE})"
-    fi
+    case "${OP}" in
+        prep)
+            [[ ! -f .env.local ]] && touch .env.local;
+            report "$(git_ignore)";
+            report "$(setup_venv ${OP})";
+            report "$(install_pip ${OP})";
+            report "$(install_dc ${OP})";
+            report "$(install_req ${OP})";;
+        recipe)
+            report "$(cook ${RECIPE})";;
+        *)
+            [[ -f .env.local ]] && report "$(create_env_file)";
+            report "$(composer ${OP})";
+            report "$(compose_local ${OP})";;
+    esac
 fi
+
 report "$(update_hosts)"
 report "$(set_aliases)"
 
