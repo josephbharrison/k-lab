@@ -23,8 +23,16 @@ servers = [
     # Server(url=f"https://myapp.myserver.com:8443"),
 ]
 
+# API Key
+api_key = {
+  "type": "apiKey",
+  "name": "X-API-Key",
+  "in": "header"
+}
+security_schemes = {"api_key": api_key }
+
 # Create Flask app with OpenAPI
-app = OpenAPI(__name__, info=info, servers=servers)
+app = OpenAPI(__name__, info=info, servers=servers, security_schemes=security_schemes)
 CORS(app, origins='*', methods=['GET', 'HEAD', 'OPTIONS'], max_age=3600, allow_headers='*')
 
 # Cache configuration
