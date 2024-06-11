@@ -466,7 +466,6 @@ function command_opts(){
     get_args "down" "bring environment down"
     get_args "build" "build containers"
     get_args "clean" "reset the environment"
-    get_args "clone <target>" "clone current project to target"
     get_args "prep" "prepare venv only"
     get_args "recipe -r <recipe>" "configure environment by recipe"
 }

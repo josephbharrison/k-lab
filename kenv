@@ -4,7 +4,14 @@
 #
 
 # Source core functions from lib/core.sh
-source lib/core.sh
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+source "$DIR/lib/core.sh"
 
 [[ ! -f .env.local ]] && touch .env.local
 
@@ -15,24 +22,6 @@ GIT_URL='github.com/josephbharrison/k-lab'
 
 # setup python virtual env
 declare platform
-
-function set_example(){
-    example=$1
-    [[ ! -d examples/${example} ]] && usage 1 "example '${example}' not found"
-    cp -f "examples/${example}/app.py" "${PROJECT_DIR}/app.py"
-    [[ -d examples/${example}/charts ]] && \
-        rm -rf ${PROJECT_DIR}/charts && \
-        cp -r examples/${example}/charts charts/
-    cp -f "examples/${example}/requirements.txt" "${PROJECT_DIR}/requirements.txt"
-    if [[ -f "examples/${example}/compose" ]];then
-    rm -rf ${PROJECT_DIR}/docker-compose
-        mkdir ${PROJECT_DIR}/docker-compose
-        while read -r dc
-        do
-            cp -r ${PROJECT_DIR}/.compose/${dc} ${PROJECT_DIR}/docker-compose/${dc}
-        done < examples/${example}/compose
-    fi
-}
 
 function set_mode(){
     mode=$1
@@ -82,7 +71,7 @@ function set_opts(){
     esac
 
     OPTS=$(getopt \
-        -o hve:t:p:m:r: \
+        -o hvt:p:m:r: \
         -l verbose,environment:,tag:,project:,mode:,recipe: \
         -n 'env' -- "$@")
 
@@ -97,7 +86,6 @@ function set_opts(){
             -h|--help)             export HELP=true; shift 1; usage 0;;
             -v|--verbose)          export VERBOSE=true; shift 1;;
             -m|--mode)             export MODE=$2; shift 2;;
-            -e|--example)          export EXAMPLE=$2; shift 2;;
             -t|--tag)              export PY_VERSION=$2; shift 2;;
             -r|--recipe)           export RECIPE=$2; shift 2;;
             --) shift 1; break;;
@@ -118,7 +106,6 @@ export PROJECT_DIR PROJECT
 
 set_opts "$@"
 
-[[ -n "${EXAMPLE}" ]] && set_example "${EXAMPLE}"
 [[ -n "${MODE}" && -f .env.local ]] && set_mode "${MODE}"
 
 # report results
