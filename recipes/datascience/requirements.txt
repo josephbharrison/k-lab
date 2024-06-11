@@ -1,0 +1,10 @@
+pandas
+pynvim
+jupyter
+pillow
+cairosvg
+pnglatex
+plotly
+kaleido
+matplotlib
+kitty
