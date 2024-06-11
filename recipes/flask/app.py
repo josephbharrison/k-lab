@@ -92,15 +92,15 @@ def get_book_details(isbn: str):
 
 @app.errorhandler(HTTPStatus.NOT_FOUND)
 def handle_not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    return make_response(jsonify({'error': f'Not found - {error}'}), 404)
 
 @app.errorhandler(HTTPStatus.UNAUTHORIZED)
 def handle_unauthorized(error):
-    return make_response(jsonify({'error': 'Unauthorized'}), 401)
+    return make_response(jsonify({'error': f'Unauthorized - {error}'}), 401)
 
 @app.errorhandler(HTTPStatus.INTERNAL_SERVER_ERROR)
 def handle_internal_server_error(error):
-    return make_response(jsonify({'error': 'Internal server error'}), 500)
+    return make_response(jsonify({'error': f'Internal server error - {error}'}), 500)
 
 def match_api_keys(key):
     return key in TOKENS
