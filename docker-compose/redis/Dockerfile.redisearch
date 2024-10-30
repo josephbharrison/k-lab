@@ -24,9 +24,11 @@ FROM redis:${REDIS_VER}
 WORKDIR /data
 
 RUN mkdir -p /usr/lib/redis/modules
-
 COPY --from=builder /RediSearch/bin/linux-arm64v8-release/search/redisearch.so /usr/lib/redis/modules
-COPY --from=builder /RediSearch/bin/linux-arm64v8-release/search/rejson.so /usr/lib/redis/modules
+
+# EXPOSE 6379
+#
+# CMD [ "redis-server", "--loadmodule", "/usr/lib/redis/modules/redisearch.so" ]
 
 ADD docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh

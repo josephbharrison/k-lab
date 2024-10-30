@@ -2,7 +2,9 @@ version: "3.1"
 
 services:
   redis:
-    image: redisfab/rejson:master-arm64v8-bionic
+    # image: redisfab/rejson:master-arm64v8-bionic
+    # NOTE: `docker build . -t redislabs/redisearch:arm64`
+    image: redislabs/redisearch:arm64
     hostname: redis.${PROJECT}
     container_name: redis.${PROJECT}
     volumes:
