@@ -81,4 +81,10 @@ if [ "$MASTER_NAME" ]; then
     fi
 fi
 
-exec redis-server $SENTINEL_CONFIGURATION_FILE --sentinel --loadmodule /usr/lib/redis/modules/rejson.so
+# exec redis-server $SENTINEL_CONFIGURATION_FILE --sentinel --loadmodule /usr/lib/redis/modules/rejson.so --loadmodule /usr/lib/redis/modules/redisearch.so
+
+exec redis-server $SENTINEL_CONFIGURATION_FILE --sentinel \
+  --loadmodule /opt/redis-stack/lib/redisgraph.so \
+  --loadmodule /opt/redis-stack/lib/redisgears.so \
+  --loadmodule /opt/redis-stack/lib/rejson.so \
+  --loadmodule /opt/redis-stack/lib/redisearch.so

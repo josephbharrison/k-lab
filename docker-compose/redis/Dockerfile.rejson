@@ -1,4 +1,4 @@
-FROM redis/redis-stack:6.2.6-v17-arm64
+FROM redisfab/rejson:master-arm64v8-bionic
 
 ADD docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
