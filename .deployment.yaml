@@ -1,0 +1,14 @@
+domain: subscriber.access
+patterns:
+  - controller
+values:
+  env:
+    nodered_host: pod-nodered.nodered.svc.cluster.local
+    nodered_port: 1880
+    nodered_res: flow
+    kafka_host: kafka.kafka.svc.cluster.local
+    kafka_port: 9092
+    nats_host: nats.nats.svc.cluster.local
+    nats_port: 4222
+    flow_match_ttl: 120
+    flow_intent_url: http://app.flow-intent.svc.cluster.local/v1.0/flow-intents

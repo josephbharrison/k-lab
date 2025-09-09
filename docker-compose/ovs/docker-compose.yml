@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+  ovs:
+    build: .
+    hostname: ovs.${PROJECT}
+    container_name: ovs.${PROJECT}
+    privileged: true
+    volumes:
+      - ${PWD}/start_ovs.sh:/ovs/start_ovs.sh
+
+networks:
+  default:
+    external:
+      name: ${PROJECT}

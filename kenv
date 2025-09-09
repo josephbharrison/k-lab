@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+#
+# REQUIRES: gnu-getopt
+#
+
+GIT_URL='github.com/josephbharrison/k-lab'
+
+# Source core functions from lib/core.sh
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  LAB_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+LAB_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+source "$LAB_DIR/lib/core.sh"
+
+# Report Usage
+function usage(){
+    status=$1
+    msg=$2
+    [[ -z "${status}" ]] && status=1
+    [[ -n "${msg}" ]] && echo "Response: ${msg}"
+    CMD_HEADER='
+Usage:
+  kenv <command> [opts]'
+    echo -e "${CMD_HEADER}"
+    usage_footer
+    exit $status
+}
+
+declare HELP VERBOSE OP EXAMPLE PY_VERSION DOCKER_DEFAULT_PLATFORM
+function set_opts(){
+
+    case "$1" in
+        up)             export OP='up'; shift 1;;
+        clean)          export OP='clean'; shift 1;;
+        down)           export OP='down'; shift 1;;
+        build)          export OP='build'; shift 1;;
+        prep)           export OP='prep'; shift 1;;
+        recipe)         export OP='recipe'; shift 1;;
+    esac
+
+    OPTS=$(getopt \
+        -o hvt:p:m:r: \
+        -l verbose,environment:,tag:,project:,mode:,recipe: \
+        -n 'env' -- "$@")
+
+    if [ $? != 0 ];then
+        usage 1 >&2
+        exit 1
+    fi
+
+    eval set -- "${OPTS}"
+    while true; do
+        case "$1" in
+            -h|--help)             export HELP=true; shift 1; usage 0;;
+            -v|--verbose)          export VERBOSE=true; shift 1;;
+            -m|--mode)             export MODE=$2; shift 2;;
+            -t|--tag)              export PY_VERSION=$2; shift 2;;
+            -r|--recipe)           export RECIPE=$2; shift 2;;
+            --) shift 1; break;;
+            *) usage 1; break;;
+        esac
+    done
+}
+
+PROJECT_DIR=$(pwd)
+PROJECT=${PWD##*/}
+export PROJECT_DIR PROJECT
+
+[[ -z "${HELP}" ]] && HELP=false
+[[ -z "${VERBOSE}" ]] && VERBOSE=false
+[[ -z "${PY_VERSION}" ]] && PY_VERSION="3.8.5"
+[[ -z "${PY_VERSION_SHORT}" ]] && PY_VERSION_SHORT=${PY_VERSION:0:3}
+[[ -z "${MODE}" ]] && MODE="local"
+
+set_opts "$@"
+
+[[ -n "${MODE}" && -f .env.local ]] && set_mode "${MODE}"
+
+# report results
+if [[ -n ${OP} ]];then
+    case "${OP}" in
+        prep)
+            [[ ! -f .env.local ]] && touch .env.local;
+            report "$(git_ignore)";
+            report "$(setup_venv ${OP})";
+            report "$(install_pip ${OP})";
+            report "$(install_dc ${OP})";
+            report "$(install_req ${OP})";;
+        recipe)
+            report "$(cook ${RECIPE})";;
+        *)
+            [[ -f .env.local ]] && report "$(create_env_file)";
+            report "$(composer ${OP})";
+            report "$(compose_local ${OP})";;
+    esac
+fi
+
+report "$(update_hosts)"
+report "$(set_aliases)"
+
+exit 0

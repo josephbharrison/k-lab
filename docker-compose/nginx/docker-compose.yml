@@ -1,0 +1,15 @@
+# docker-compose.yaml
+version: "3.1"
+
+services:
+  nginx:
+    image: nginx
+    hostname: nginx.${PROJECT}
+    container_name: nginx.${PROJECT}
+    ports:
+      - 8000:80
+
+networks:
+  default:
+    external:
+      name: ${PROJECT}
